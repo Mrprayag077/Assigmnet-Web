@@ -42,11 +42,8 @@ const Articles = () => {
         const filteredArticles = data.filter(
           (article) => article.source.name !== "[Removed]"
         );
-        setArticles(filteredArticles);
-        setLoading(false);
       } catch (err) {
         console.log(error)
-        setLoading(false);
       }
     };
 
@@ -94,7 +91,6 @@ const Articles = () => {
       <div className="flex justify-center gap-8 items-start mt-10 min-h-screen p-4">
         <div className="w-full max-w-lg lg:max-w-4xl">
           {articles.length > 0 ? (
-            // Render articles if available
             articles.map((article, index) => (
               <div
                 key={index}
@@ -143,7 +139,6 @@ const Articles = () => {
                 </div>
               ))
           ) : (
-            // Render when no articles are available
             <div className="flex flex-col items-center justify-center text-center">
               <img src={newPaperImg} alt="No news available" className="w-[200px] lg:w-[300px]" />
               <p className="mt-4 text-xl text-gray-500">No news available</p>
