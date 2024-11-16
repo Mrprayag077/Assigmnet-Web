@@ -18,8 +18,12 @@ import HealthAndSafetyIcon from "@mui/icons-material/HealthAndSafety";
 import ScienceIcon from "@mui/icons-material/Science";
 import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
 import ComputerIcon from "@mui/icons-material/Computer";
+import { useDispatch } from "react-redux";
+import { fetchArticles } from "../redux/articlesSlice"; // Import the fetchArticles action
 
 export default function SideBar({ open, toggleDrawer }) {
+  const dispatch = useDispatch();
+
   const categories = [
     { name: "Business", icon: <BusinessIcon /> },
     { name: "Entertainment", icon: <MovieIcon /> },
@@ -29,6 +33,12 @@ export default function SideBar({ open, toggleDrawer }) {
     { name: "Sports", icon: <SportsSoccerIcon /> },
     { name: "Technology", icon: <ComputerIcon /> },
   ];
+
+  // Handle category click to fetch articles for the selected category
+  const handleCategoryClick = (category) => {
+    dispatch(fetchArticles(category)); // Dispatch fetchArticles with the selected category
+    toggleDrawer(false); // Close the drawer after selection
+  };
 
   const DrawerList = (
     <Box sx={{ width: 216, height: "100%", bgcolor: "#303036", color: "#fff" }}>
@@ -56,7 +66,7 @@ export default function SideBar({ open, toggleDrawer }) {
       <List sx={{ mt: 1 }}>
         {categories.map((category) => (
           <ListItem key={category.name} disablePadding>
-            <ListItemButton>
+            <ListItemButton onClick={() => handleCategoryClick(category.name)}>
               <ListItemIcon sx={{ color: "#fff" }}>{category.icon}</ListItemIcon>
               <ListItemText primary={category.name} />
             </ListItemButton>
@@ -72,7 +82,7 @@ export default function SideBar({ open, toggleDrawer }) {
       onClose={toggleDrawer(false)}
       anchor="left"
       PaperProps={{
-        sx: { position: "relative", zIndex: 999, bgcolor: 'transparent', transition: "transform 0.3s ease-in-out", },
+        sx: { position: "relative", zIndex: 999, bgcolor: "transparent", transition: "transform 0.3s ease-in-out" },
       }}
     >
       {DrawerList}

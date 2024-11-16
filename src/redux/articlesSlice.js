@@ -2,11 +2,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchTopHeadlines } from "../service/http";
 
-// Async thunk to fetch articles from the API
+// Async thunk to fetch articles based on the category
 export const fetchArticles = createAsyncThunk(
   "articles/fetchArticles",
-  async () => {
-    const data = await fetchTopHeadlines();
+  async (category = "") => {
+    const data = await fetchTopHeadlines(category);
     // Filtering out articles with the source name "[Removed]"
     return data.filter((article) => article.source.name !== "[Removed]");
   }
