@@ -19,7 +19,7 @@ const ArticlePopup = ({
     // Mobile Popup
     <div className="fixed w-full bottom-0 left-0 right-0 bg-neutral-100 p-4 rounded-lg shadow-lg z-50">
       <img
-        src={selectedArticle.urlToImage || defaultImg}
+        src={selectedArticle.urlToImage}
         alt={selectedArticle.title}
         className="w-full h-[250px] object-cover rounded-md mb-4"
       />
@@ -55,7 +55,7 @@ const ArticlePopup = ({
       }}
     >
       <img
-        src={selectedArticle.urlToImage || defaultImg}
+        src={selectedArticle.urlToImage || selectedArticle.title}
         alt={selectedArticle.title}
         className="w-full h-[250px] object-cover rounded-md mb-4"
       />
