@@ -3,13 +3,31 @@ import { fetchTopHeadlines } from "../service/http";
 import defaultImg from '../assets/image2.png';
 import NotificationBar from './NotificationBar';
 import ArticlePopup from "./ArticlePopup";
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchArticles, setSelectedArticle, clearSelectedArticle } from '../redux/articlesSlice';
 
 const Articles = () => {
-  const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  
+  
+  
+  
+  const dispatch = useDispatch();
+
+  const { articles, loading, error, selectedArticle } = useSelector(
+    (state) => state.articles
+  );
+
+  // Fetch articles when the component mounts
+  useEffect(() => {
+    dispatch(fetchArticles());
+  }, [dispatch]);
+
+
+  // const [articles, setArticles] = useState([]);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [selectedArticle, setSelectedArticle] = useState(null);
+  // const [selectedArticle, setSelectedArticle] = useState(null);
   const [popupPosition, setPopupPosition] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const articleRefs = useRef({});
@@ -49,12 +67,16 @@ const Articles = () => {
       setPopupPosition(rect.top + window.scrollY);
     }
     setSelectedArticle(article);
+    dispatch(setSelectedArticle(article));
+
     setIsPopupOpen(true);
   };
 
   const closePopup = () => {
     setIsPopupOpen(false);
     setSelectedArticle(null);
+    dispatch(clearSelectedArticle());
+
   };
 
   if (loading) {

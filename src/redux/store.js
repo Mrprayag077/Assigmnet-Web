@@ -1,9 +1,11 @@
+// src/redux/store.js
 import { configureStore } from "@reduxjs/toolkit";
-import newsReducer from "./newsSlice";
+import articlesReducer from "./articlesSlice";
 
+// Configure the store and add the articles slice
 const store = configureStore({
   reducer: {
-    news: newsReducer,
+    articles: articlesReducer, // Articles slice reducer
   },
 });
 
