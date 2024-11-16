@@ -66,7 +66,7 @@ export default function SideBar({ open, toggleDrawer }) {
       <List sx={{ mt: 1 }}>
         {categories.map((category) => (
           <ListItem key={category.name} disablePadding>
-            <ListItemButton onClick={() => handleCategoryClick(category.name)}>
+            <ListItemButton onClick={() => { toggleDrawer(false); handleCategoryClick(category.name); }}>
               <ListItemIcon sx={{ color: "#fff" }}>{category.icon}</ListItemIcon>
               <ListItemText primary={category.name} />
             </ListItemButton>
