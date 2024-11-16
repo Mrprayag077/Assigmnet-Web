@@ -3,7 +3,9 @@ import React from 'react';
 const NotificationBar: React.FC = () => {
   return (
     <>
-      <div className="flex flex-col lg:flex-row  items-center bg-red-500 text-sm shadow-lg mt-12 mb-8 mx-auto p-2.5 w-full max-w-4xl justify-between">
+      
+
+      <div className="flex flex-col lg:flex-row  items-center bg-red-500 text-sm shadow-lg mt-2 mb-8 mx-auto p-2.5 w-full max-w-4xl justify-between">
         <div className="text-white text-xs lg:text-lg py-1 pb-2 lg:font-medium lg:mb-0 text-center lg:text-left">
           For the best experience use{" "}
           <a
