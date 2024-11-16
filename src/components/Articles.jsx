@@ -45,7 +45,7 @@ const Articles = () => {
         setArticles(filteredArticles);
         setLoading(false);
       } catch (err) {
-        setError("Failed to load articles. Please try again later.");
+        console.log(error)
         setLoading(false);
       }
     };
