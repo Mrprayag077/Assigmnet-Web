@@ -64,6 +64,13 @@ const Articles = () => {
     return <div className="text-center text-red-500">{error}</div>;
   }
 
+
+  const truncateText = (text, wordLimit) => {
+    const words = text.split(' ');
+    if (words.length <= wordLimit) return text;
+    return words.slice(0, wordLimit).join(' ') + '...';
+  };
+
   return (
     <div className="flex flex-col justify-center">
       <NotificationBar />
@@ -162,6 +169,37 @@ const Articles = () => {
             </div>
           </div>
         )}
+
+        {isPopupOpen && selectedArticle && isMobile && (
+          <div
+            className="fixed w-full  bottom-0 left-0 right-0 bg-neutral-100 p-4 rounded-lg shadow-lg z-50"
+          >
+            <img
+              src={selectedArticle.urlToImage || defaultImg}
+              alt={selectedArticle.title}
+              className="w-full h-[250px] object-cover rounded-md mb-4"
+            />
+            <h2 className="text-[19px] font-bold mb-2">{selectedArticle.title}</h2>
+            <p className="text-gray-600 text-[16px] mb-4"> {truncateText(selectedArticle.description, 50)}</p>
+            <div className="flex flex-col sm:flex-row justify-between gap-3">
+              <button
+                onClick={closePopup}
+                className="bg-red-500 text-white px-4 py-2 w-full sm:w-1/2 rounded hover:bg-red-600 mb-3 sm:mb-0"
+              >
+                Close
+              </button>
+              <a
+                href={selectedArticle.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-green-500 text-white px-4 py-2 w-full sm:w-1/2 text-center rounded hover:bg-green-600"
+              >
+                View Full Article
+              </a>
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   );
