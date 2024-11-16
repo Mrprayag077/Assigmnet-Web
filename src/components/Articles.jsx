@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { fetchTopHeadlines } from "../service/http";
 import defaultImg from '../assets/image.png';
+import NotificationBar from './NotificationBar';
 
 const Articles = () => {
   const [articles, setArticles] = useState([]);
@@ -8,17 +9,17 @@ const Articles = () => {
   const [error, setError] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState(null);
-  const [isMobile, setIsMobile] = useState(false); // Track if the device is mobile
+  const [popupPosition, setPopupPosition] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const articleRefs = useRef({});
 
-  // Check if the screen size is mobile
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768); // Adjust the threshold as needed
+      setIsMobile(window.innerWidth <= 768);
     };
 
-    handleResize(); // Set initial value
+    handleResize();
     window.addEventListener("resize", handleResize);
-
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -40,7 +41,12 @@ const Articles = () => {
     fetchArticles();
   }, []);
 
-  const openPopup = (article) => {
+  const openPopup = (article, index) => {
+    const element = articleRefs.current[index];
+    if (element) {
+      const rect = element.getBoundingClientRect();
+      setPopupPosition(rect.top + window.scrollY);
+    }
     setSelectedArticle(article);
     setIsPopupOpen(true);
   };
@@ -60,57 +66,20 @@ const Articles = () => {
 
   return (
     <div className="flex flex-col justify-center">
-      {/* Red Box: For best experience section */}
-      <div className="flex items-center bg-red-500 text-sm shadow-lg mt-12 mb-8 mx-auto p-2.5 w-full max-w-4xl justify-between -z-10">
-        <div className="text-white font-medium">
-          For the best experience use{" "}
-          <a
-            target="_blank"
-            href="https://inshorts.com/mobile"
-            className="text-white font-medium"
-          >
-            inshorts
-          </a>{" "}
-          app on your smartphone
-        </div>
-        <div className="flex">
-          <a
-            target="_blank"
-            href="https://inshorts.onelink.me/398813699/Website"
-            className="flex"
-          >
-            <img
-              className="iAjs3sBFVb0SFkCNlLII"
-              src="https://assets.inshorts.com/website_assets/images/appstore.png"
-              height="52"
-              width="140"
-              alt="inshorts"
-            />
-          </a>
-          <a
-            target="_blank"
-            href="https://inshorts.onelink.me/398813699/Website"
-            className="flex"
-          >
-            <img
-              className="iAjs3sBFVb0SFkCNlLII"
-              src="https://assets.inshorts.com/website_assets/images/playstore.png"
-              height="52"
-              width="140"
-              alt="inshorts"
-            />
-          </a>
-        </div>
-      </div>
+      <NotificationBar />
 
-      {/* Articles List */}
-      <div className="flex justify-center gap-3  items-center mt-10 min-h-screen p-4">
+
+
+      {/* Main content area */}
+      <div className="flex justify-center gap-8 items-start mt-10 min-h-screen p-4">
+        {/* Articles List */}
         <div className="w-full max-w-lg lg:max-w-4xl">
           {articles.map((article, index) => (
             <div
               key={index}
+              ref={el => articleRefs.current[index] = el}
               className="rounded-sm shadow-custom box-border flex flex-col lg:flex-row gap-4 font-light h-full mb-5 mx-auto px-2 py-2 relative w-full"
-              onClick={() => openPopup(article)}
+              onClick={() => openPopup(article, index)}
             >
               {/* Left column: Image */}
               <div className="w-full lg:w-1/3 flex-shrink-0 mb-4 lg:mb-0">
@@ -134,7 +103,9 @@ const Articles = () => {
                     </span>
                     <span>{article.publishedAt}</span>
                   </p>
-                  <p className="mt-2 text-gray-600 text-[15px] lg:text-lg">{article.description || "No Description"}</p>
+                  <p className="mt-2 text-gray-600 text-[15px] lg:text-lg">
+                    {article.description || "No Description"}
+                  </p>
                 </div>
 
                 <div className="mt-4">
@@ -143,8 +114,9 @@ const Articles = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-black hover:underline no-underline font-[500] text-sm"
+                    onClick={e => e.stopPropagation()}
                   >
-                    <span className="">read more at </span>
+                    <span>read more at </span>
                     {article.publishedAt}
                   </a>
                 </div>
@@ -153,9 +125,18 @@ const Articles = () => {
           ))}
         </div>
 
-        {/* Render popup only if it's a larger screen */}
+        {/* Sticky Popup */}
         {isPopupOpen && selectedArticle && !isMobile && (
-          <div className=" bg-white p-4  w-1/3 rounded-lg shadow-lg z-50">
+          <div
+            // className="sticky top-4 mt-[250px] bg-white p-4 w-1/3 rounded-lg shadow-lg"
+            className="sticky bg-white p-4 w-1/3 rounded-lg shadow-lg"
+            style={{
+              maxHeight: 'calc(100vh - 2rem)',
+              overflowY: 'auto',
+              top: 'calc(4rem + 20px)' // Adjust for your menu bar height (e.g., 4rem) and any additional spacing (10px)
+            }}
+          // style={{ maxHeight: 'calc(100vh - 2rem)', overflowY: 'auto' }}
+          >
             <img
               src={selectedArticle.urlToImage || defaultImg}
               alt={selectedArticle.title}
@@ -182,10 +163,6 @@ const Articles = () => {
           </div>
         )}
       </div>
-
-
-
-
     </div>
   );
 };
